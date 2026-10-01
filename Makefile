@@ -34,8 +34,15 @@ workspace-dir:
 up: workspace-dir
 	@echo "Starting OpenHands on http://localhost:$(PORT)..."
 	@docker compose up -d
+	@echo "Waiting for OpenHands server to become ready..."
+	@for i in $$(seq 1 30); do \
+		if curl -fs -o /dev/null "http://127.0.0.1:$(PORT)" 2>/dev/null; then \
+			break; \
+		fi; \
+		sleep 1; \
+	done
 	@echo ""
-	@echo "OpenHands is running!"
+	@echo "OpenHands is ready!"
 	@echo "Access the Web GUI at: http://localhost:$(PORT)"
 	@echo "Workspace bind-mounted from: $(WORKSPACE_DIR)"
 
