@@ -157,6 +157,8 @@ Once started:
   - `./openhands/agents`: Custom subagent definitions (`scout.md`, `worker.md`).
   - `./openhands/tools`: Custom tools.
 
+**LLM streaming:** `openhands/config/settings.example.json` sets `"stream": true` for `agent_settings.llm` and both named profiles (`qwen3.5-9b-openhands` and `ornith-1.5-openhands`). `make up` copies the template only when `openhands/config/settings.json` is absent; existing saved settings are not overwritten. For an existing installation, set those same three `stream` fields to `true` in `openhands/config/settings.json` in place, preserving the models, credentials, and active profile rather than replacing the file with the template.
+
 **Useful Make shortcuts:**
 ```bash
 make up        # Start OpenHands in background and display GUI URL

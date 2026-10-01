@@ -4,6 +4,7 @@
     "agent_kind": "openhands",
     "llm": {
       "model": "ollama_chat/qwen3.5-9b-openhands:latest",
+      "stream": true,
       "api_key": "ollama"
     }
   },
@@ -11,10 +12,12 @@
     "profiles": {
       "qwen3.5-9b-openhands": {
         "model": "ollama_chat/qwen3.5-9b-openhands:latest",
+        "stream": true,
         "api_key": "ollama"
       },
       "ornith-1.5-openhands": {
         "model": "ollama_chat/ornith-1.5-openhands:latest",
+        "stream": true,
         "api_key": "ollama"
       }
     },
