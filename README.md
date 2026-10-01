@@ -9,7 +9,7 @@ Two coding agents — [OpenHands](https://docs.openhands.dev) and [Pi](https://p
 ```text
 openhands/
   pyproject.toml / uv.lock    local OpenHands SDK (v1.27.0) and uv (v0.12.21)
-  config/settings.json        OpenHands LLM endpoint and model settings
+  config/settings.example.json  OpenHands model profiles template (copied to gitignored settings.json)
   prompts/
     system_prompt.txt         custom system prompt (full verbatim override)
   agents/
@@ -152,7 +152,7 @@ Once started:
 - Open your browser to **`http://localhost:8000`**.
 - **Workspace bind mount**: The `./workspace` directory on your host is mounted to `/opt/workspace_base` (and passed to spawned sandbox containers via the host Docker daemon).
 - **Custom work bind mounts**:
-  - `./openhands/config`: Persistent state, SQLite database (`openhands.db`), and `settings.json`.
+  - `./openhands/config`: Persistent state, SQLite database (`openhands.db`), and the gitignored `settings.json` (created from `settings.example.json` on `make up`).
   - `./openhands/prompts`: Custom system prompts.
   - `./openhands/agents`: Custom subagent definitions (`scout.md`, `worker.md`).
   - `./openhands/tools`: Custom tools.
@@ -177,4 +177,6 @@ Run SDK scripts locally against the environment:
 ```bash
 uv run --locked --project openhands python your_script.py
 ```
-The default model and endpoint fallback are in `openhands/config/settings.json`, and can be overridden via `LLM_BASE_URL` or `OLLAMA_BASE_URL` in `.env`.
+Model profiles live in `openhands/config/settings.example.json` and contain no endpoint URLs; the Ollama host comes from `OLLAMA_HOST` / `LLM_BASE_URL` in `.env` (forwarded as `OLLAMA_API_BASE`).
+
+Models use the `ollama_chat/` provider prefix (Ollama `/api/chat`, native tool calling). Avoid `ollama/`: LiteLLM routes it to `/api/generate` and fakes tool calls with a JSON-mode prompt, which makes models like `ornith-1.5-openhands` invent tool names (e.g. `function_name`) or leak `{}` into the chat.
