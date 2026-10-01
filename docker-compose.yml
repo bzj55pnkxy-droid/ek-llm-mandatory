@@ -8,6 +8,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
+      - SANDBOX_HOST_PORT=${OPENHANDS_PORT:-8000}
       - OH_SANDBOX_HOST_PORT=${OPENHANDS_PORT:-8000}
       - OH_WEB_URL=http://host.docker.internal:${OPENHANDS_PORT:-8000}
       - SANDBOX_USER_ID=${SANDBOX_USER_ID:-0}
@@ -19,6 +20,10 @@ services:
       - SANDBOX_RUNTIME_CONTAINER_IMAGE=${OPENHANDS_AGENT_SERVER_IMAGE:-ghcr.io/openhands/agent-server}:${OPENHANDS_AGENT_SERVER_TAG:-1.26.0-python}
       - LLM_BASE_URL=${LLM_BASE_URL:-http://${OLLAMA_HOST:-host.docker.internal}:11434/v1}
       - OLLAMA_BASE_URL=${OLLAMA_DISCOVERY_URL:-http://${OLLAMA_HOST:-host.docker.internal}:11434}
+      - OLLAMA_API_BASE=${OLLAMA_DISCOVERY_URL:-http://${OLLAMA_HOST:-host.docker.internal}:11434}
+      - OPENAI_BASE_URL=${LLM_BASE_URL:-http://${OLLAMA_HOST:-host.docker.internal}:11434/v1}
+      - OPENAI_API_BASE=${LLM_BASE_URL:-http://${OLLAMA_HOST:-host.docker.internal}:11434/v1}
+      - OH_AGENT_SERVER_ENV={"OLLAMA_API_BASE":"${OLLAMA_DISCOVERY_URL:-http://${OLLAMA_HOST:-host.docker.internal}:11434}","OPENAI_API_BASE":"${LLM_BASE_URL:-http://${OLLAMA_HOST:-host.docker.internal}:11434/v1}","OPENAI_BASE_URL":"${LLM_BASE_URL:-http://${OLLAMA_HOST:-host.docker.internal}:11434/v1}"}
       - SANDBOX_MEMORY=${SANDBOX_MEMORY:-4g}
       - SANDBOX_CPUS=${SANDBOX_CPUS:-2}
       - SANDBOX_PIDS_LIMIT=${SANDBOX_PIDS_LIMIT:-512}

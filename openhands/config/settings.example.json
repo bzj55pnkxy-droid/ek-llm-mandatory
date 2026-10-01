@@ -1,0 +1,23 @@
+{
+  "schema_version": 3,
+  "agent_settings": {
+    "agent_kind": "openhands",
+    "llm": {
+      "model": "ollama/qwen3.5-9b-openhands:latest",
+      "api_key": "ollama"
+    }
+  },
+  "llm_profiles": {
+    "profiles": {
+      "qwen3.5-9b-openhands": {
+        "model": "ollama/qwen3.5-9b-openhands:latest",
+        "api_key": "ollama"
+      },
+      "ornith-1.5-openhands": {
+        "model": "ollama/ornith-1.5-openhands:latest",
+        "api_key": "ollama"
+      }
+    },
+    "active": "qwen3.5-9b-openhands"
+  }
+}

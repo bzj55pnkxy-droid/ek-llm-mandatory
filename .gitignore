@@ -5,7 +5,7 @@
 # OpenHands writes state next to settings.json: conversations, the SQLite DB,
 # and the auto-generated OH_SECRET_KEY / session API key.
 openhands/config/*
-!openhands/config/settings.json
+!openhands/config/settings.example.json
 
 # Pi runtime cache, auth, and sessions
 pi/.pi/models-store.json

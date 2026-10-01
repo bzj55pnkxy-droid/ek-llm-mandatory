@@ -26,10 +26,12 @@ help:
 	@echo "  make shell      Open a bash shell inside the OpenHands container"
 	@echo "  make clean      Stop containers and remove orphans"
 
-## Ensure workspace directory exists on host
+## Ensure workspace directory and config template exist on host
 workspace-dir:
 	@mkdir -p "$(WORKSPACE_DIR)"
-
+	@if [ ! -f "openhands/config/settings.json" ] && [ -f "openhands/config/settings.example.json" ]; then \
+		cp "openhands/config/settings.example.json" "openhands/config/settings.json"; \
+	fi
 ## Start OpenHands in Docker with workspace and custom work bind-mounted
 up: workspace-dir
 	@echo "Starting OpenHands on http://localhost:$(PORT)..."
