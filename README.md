@@ -107,31 +107,39 @@ Available models on both ports:
 - `qwen3.5:9b`
 - `ornith-1.5:9b`
 
-When running Pi with `-a` / `--approve`, the project extension automatically reads `.env` and wires these endpoints. OpenHands scripts can similarly read `OLLAMA_BASE_URL` or `LLM_BASE_URL` from the environment.
+`pi/.pi/models.json` automatically interpolates `${OLLAMA_BASE_URL}` and `${OLLAMA_BASE_URL_11435}` from your environment without hardcoded IPs or arbitrary context limits.
+
 ---
 
 ## Usage
 
 ### 1. Pi (Interactive TUI / CLI)
 
-Run Pi directly using the local installed package:
+Run Pi with `PI_CODING_AGENT_DIR=.pi` so it loads the project's `.pi/models.json` and local extensions:
 
-**Unix:**
+**Unix (macOS / Linux / WSL):**
 ```bash
 cd pi
-./node_modules/.bin/pi --provider ollama-11434 --model "qwen3.5-9b-openhands:latest" -a
+PI_CODING_AGENT_DIR=.pi ./node_modules/.bin/pi --provider ollama-11434 --model "qwen3.5-9b-openhands:latest" -a
 ```
 
-**Windows (PowerShell / Command Prompt):**
+**Windows (PowerShell):**
 ```powershell
 cd pi
+$env:PI_CODING_AGENT_DIR = ".pi"
+.\node_modules\.bin\pi.cmd --provider ollama-11434 --model "qwen3.5-9b-openhands:latest" -a
+```
+
+**Windows (Command Prompt):**
+```cmd
+cd pi
+set PI_CODING_AGENT_DIR=.pi
 .\node_modules\.bin\pi.cmd --provider ollama-11434 --model "qwen3.5-9b-openhands:latest" -a
 ```
 
 *(The `-a` / `--approve` flag trusts project-local `.pi/` extensions and models).*
 
-To use the instance on port 11435, specify `--provider ollama-11435`.
-
+To target the second instance on port 11435, pass `--provider ollama-11435`.
 ### 2. OpenHands (Docker Web GUI)
 
 To launch OpenHands with the browser GUI and your custom work bind-mounted:
