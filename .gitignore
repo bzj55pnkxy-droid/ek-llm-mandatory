@@ -11,6 +11,7 @@ openhands/config/*
 pi/.pi/models-store.json
 pi/.pi/auth.json
 pi/.pi/sessions/
+pi/.pi/bin/
 # Pi checkout fetched by `make install`.
 pi/src/
 
