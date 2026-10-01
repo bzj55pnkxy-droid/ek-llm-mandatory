@@ -8,6 +8,8 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
+      - OH_SANDBOX_HOST_PORT=${OPENHANDS_PORT:-8000}
+      - OH_WEB_URL=http://host.docker.internal:${OPENHANDS_PORT:-8000}
       - SANDBOX_USER_ID=${SANDBOX_USER_ID:-0}
       - WORKSPACE_MOUNT_PATH=${WORKSPACE_DIR:-/opt/workspace_base}
       - WORKSPACE_BASE=/opt/workspace_base
@@ -15,8 +17,8 @@ services:
       - AGENT_SERVER_IMAGE_REPOSITORY=${OPENHANDS_AGENT_SERVER_IMAGE:-ghcr.io/openhands/agent-server}
       - AGENT_SERVER_IMAGE_TAG=${OPENHANDS_AGENT_SERVER_TAG:-1.26.0-python}
       - SANDBOX_RUNTIME_CONTAINER_IMAGE=${OPENHANDS_AGENT_SERVER_IMAGE:-ghcr.io/openhands/agent-server}:${OPENHANDS_AGENT_SERVER_TAG:-1.26.0-python}
-      - LLM_BASE_URL=${LLM_BASE_URL:-http://host.docker.internal:11434/v1}
-      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://host.docker.internal:11434/v1}
+      - LLM_BASE_URL=${LLM_BASE_URL:-http://${OLLAMA_HOST:-host.docker.internal}:11434/v1}
+      - OLLAMA_BASE_URL=${OLLAMA_DISCOVERY_URL:-http://${OLLAMA_HOST:-host.docker.internal}:11434}
       - SANDBOX_MEMORY=${SANDBOX_MEMORY:-4g}
       - SANDBOX_CPUS=${SANDBOX_CPUS:-2}
       - SANDBOX_PIDS_LIMIT=${SANDBOX_PIDS_LIMIT:-512}
