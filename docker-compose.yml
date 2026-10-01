@@ -1,0 +1,29 @@
+services:
+  openhands:
+    image: ${OPENHANDS_IMAGE:-docker.openhands.dev/openhands/openhands:1.8}
+    container_name: openhands-app
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${OPENHANDS_PORT:-3000}:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - SANDBOX_USER_ID=${SANDBOX_USER_ID:-0}
+      - WORKSPACE_MOUNT_PATH=${WORKSPACE_DIR:-/opt/workspace_base}
+      - WORKSPACE_BASE=/opt/workspace_base
+      - FILE_STORE_PATH=/.openhands
+      - AGENT_SERVER_IMAGE_REPOSITORY=${OPENHANDS_AGENT_SERVER_IMAGE:-ghcr.io/openhands/agent-server}
+      - AGENT_SERVER_IMAGE_TAG=${OPENHANDS_AGENT_SERVER_TAG:-1.26.0-python}
+      - SANDBOX_RUNTIME_CONTAINER_IMAGE=${OPENHANDS_AGENT_SERVER_IMAGE:-ghcr.io/openhands/agent-server}:${OPENHANDS_AGENT_SERVER_TAG:-1.26.0-python}
+      - LLM_BASE_URL=${LLM_BASE_URL:-http://host.docker.internal:11434/v1}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://host.docker.internal:11434/v1}
+      - SANDBOX_MEMORY=${SANDBOX_MEMORY:-4g}
+      - SANDBOX_CPUS=${SANDBOX_CPUS:-2}
+      - SANDBOX_PIDS_LIMIT=${SANDBOX_PIDS_LIMIT:-512}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./openhands/config:/.openhands
+      - ./openhands/prompts:/.openhands/prompts:ro
+      - ./openhands/agents:/.openhands/agents:ro
+      - ./openhands/tools:/.openhands/tools:ro
+      - ${WORKSPACE_DIR:-./workspace}:/opt/workspace_base

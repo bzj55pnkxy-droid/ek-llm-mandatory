@@ -26,7 +26,7 @@ pi/
     prompts/                  custom slash commands (.md files)
 ```
 
-*(Note: `Makefile`, `docker-compose.yml`, and `pi/Dockerfile` are reset to clean empty files to be built incrementally).*
+*(Note: `docker-compose.yml` and `Makefile` provide host-agnostic orchestration for running OpenHands in Docker with bind mounts).*
 
 ---
 
@@ -132,9 +132,39 @@ cd pi
 
 To use the instance on port 11435, specify `--provider ollama-11435`.
 
-### 2. OpenHands (Python SDK)
+### 2. OpenHands (Docker Web GUI)
 
-Run SDK scripts against the local environment:
+To launch OpenHands with the browser GUI and your custom work bind-mounted:
+
+```bash
+make up
+```
+
+Once started:
+- Open your browser to **`http://localhost:3000`**.
+- **Workspace bind mount**: The `./workspace` directory on your host is mounted to `/opt/workspace_base` (and passed to spawned sandbox containers via the host Docker daemon).
+- **Custom work bind mounts**:
+  - `./openhands/config`: Persistent state, SQLite database (`openhands.db`), and `settings.json`.
+  - `./openhands/prompts`: Custom system prompts.
+  - `./openhands/agents`: Custom subagent definitions (`scout.md`, `worker.md`).
+  - `./openhands/tools`: Custom tools.
+
+**Useful Make shortcuts:**
+```bash
+make up        # Start OpenHands in background and display GUI URL
+make down      # Stop OpenHands
+make restart   # Restart OpenHands container
+make logs      # Follow container logs
+make status    # Check container status
+make shell     # Open interactive bash shell in the container
+make clean     # Stop containers and remove orphans
+```
+
+*(Alternatively, using Docker Compose directly: `docker compose up -d` / `docker compose down`).*
+
+### 3. OpenHands (Python SDK)
+
+Run SDK scripts locally against the environment:
 
 ```bash
 uv run --locked --project openhands python your_script.py

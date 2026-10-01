@@ -19,3 +19,5 @@ dist/
 
 # Local Python dependency environment.
 .venv/
+
+workspace/
