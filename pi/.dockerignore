@@ -1,0 +1,17 @@
+# Keep the build context small and hermetic.
+#
+# node_modules must never enter the context: `npm ci` inside the image produces
+# a tree for the container's platform and Node version, and a host copy would
+# shadow it. dist/ likewise — the image compiles its own.
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+.pi/
+
+.git/
+.gitignore
+
+# Local runtime state that lives under the agent dir volume.
+*.log
+.DS_Store

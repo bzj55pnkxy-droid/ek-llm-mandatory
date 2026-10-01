@@ -1,0 +1,21 @@
+# Local secrets and machine-specific overrides (absolute WORKSPACE_DIR).
+.env
+
+# Everything in the OpenHands persistence mount except the tracked config.
+# OpenHands writes state next to settings.json: conversations, the SQLite DB,
+# and the auto-generated OH_SECRET_KEY / session API key.
+openhands/config/*
+!openhands/config/settings.json
+
+# Pi runtime cache
+pi/.pi/models-store.json
+
+# Pi checkout fetched by `make install`.
+pi/src/
+
+# Never let a host install leak into the image build context.
+node_modules/
+dist/
+
+# Local Python dependency environment.
+.venv/

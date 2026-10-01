@@ -1,0 +1,11 @@
+{
+  "name": "llm-mandatory-pi",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "dependencies": {
+    "@earendil-works/pi-coding-agent": "0.99.1"
+  }
+}
