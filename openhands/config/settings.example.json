@@ -2,6 +2,7 @@
   "schema_version": 3,
   "agent_settings": {
     "agent_kind": "openhands",
+    "enable_sub_agents": true,
     "llm": {
       "model": "ollama_chat/qwen3.5-9b-openhands:latest",
       "stream": true,

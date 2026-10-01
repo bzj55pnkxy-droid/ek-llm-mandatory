@@ -154,8 +154,55 @@ Once started:
 - **Custom work bind mounts**:
   - `./openhands/config`: Persistent state, SQLite database (`openhands.db`), and the gitignored `settings.json` (created from `settings.example.json` on `make up`).
   - `./openhands/prompts`: Custom system prompts.
-  - `./openhands/agents`: Custom subagent definitions (`scout.md`, `worker.md`).
+  - `./openhands/agents`: Custom subagent definitions (`scout.md`, `worker.md`). Mounted at `/root/.openhands/agents` — the container's `HOME` is `/root`, and the SDK resolves user-level agent directories from `Path.home()`. Mounting anywhere else silently loads nothing.
   - `./openhands/tools`: Custom tools.
+
+
+#### Custom sub-agents
+
+Sub-agents are Markdown files with YAML frontmatter. Discovery order (first match wins):
+
+1. Programmatic `register_agent()`
+2. Plugin agents
+3. `{project}/.agents/agents/*.md`
+4. `{project}/.openhands/agents/*.md`
+5. `~/.agents/agents/*.md`
+6. `~/.openhands/agents/*.md`
+
+Only top-level `.md` files load; `README.md` is skipped. This repo uses the user-level path (6), bind-mounted from `./openhands/agents`. The project-level paths (3, 4) resolve inside the sandbox, whose `/workspace/project` is not populated from `./workspace`, so agents placed there are not discovered.
+
+```markdown
+---
+name: scout
+description: >
+  Read-only codebase exploration specialist.
+  <example>Where is auth handled?</example>
+tools:
+  - terminal
+model: inherit
+---
+
+# Scout
+
+You are a read-only exploration agent. Never create or modify anything.
+```
+
+Two required pieces beyond the Markdown file:
+
+- **`enable_sub_agents: true`** in `agent_settings` (settings.json, or the GUI settings page). When false, the app skips `agent_definitions` entirely and omits the task tool, so registered agents are unusable. It defaults to `false`.
+- **The `register_file_agents()` patch.** The stock GUI calls `register_builtins_agents()` but never `register_file_agents()`, so only the four built-ins (`general-purpose`, `code-explorer`, `bash-runner`, `web-researcher`) ever register. `openhands/Dockerfile` patches the vendored conversation service at build time to close that gap; `docker compose` builds it automatically.
+
+Verify what registered:
+
+```bash
+docker compose logs openhands | grep "Registered file-based agent"
+```
+
+Registration is first-wins per process, so this logs once at first conversation start. Edit a definition and restart the container to pick up changes — sub-agents have no hot-reload.
+
+> **Upgrades:** the patch script aborts the build if its upstream anchors are missing, so bumping `OPENHANDS_IMAGE` fails loudly rather than silently reverting to built-ins only. Re-derive `openhands/patches/register_file_agents.py` when that happens.
+>
+> **No GUI list:** the frontend never surfaces sub-agents — the string `subagent` does not appear in the bundle, and no endpoint exposes the registry. Delegation shows up in the transcript only after the main agent invokes it. Skills, by contrast, load into a browsable, searchable GUI surface.
 
 **LLM streaming:** `openhands/config/settings.example.json` sets `"stream": true` for `agent_settings.llm` and both named profiles (`qwen3.5-9b-openhands` and `ornith-1.5-openhands`). `make up` copies the template only when `openhands/config/settings.json` is absent; existing saved settings are not overwritten. For an existing installation, set those same three `stream` fields to `true` in `openhands/config/settings.json` in place, preserving the models, credentials, and active profile rather than replacing the file with the template.
 

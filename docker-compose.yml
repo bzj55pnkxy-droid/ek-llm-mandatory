@@ -1,6 +1,11 @@
 services:
   openhands:
     image: ${OPENHANDS_IMAGE:-docker.openhands.dev/openhands/openhands:1.8}
+    build:
+      context: ./openhands
+      dockerfile: Dockerfile
+      args:
+        OPENHANDS_IMAGE: ${OPENHANDS_IMAGE:-docker.openhands.dev/openhands/openhands:1.8}
     container_name: openhands-app
     restart: unless-stopped
     ports:
@@ -31,6 +36,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./openhands/config:/.openhands
       - ./openhands/prompts:/.openhands/prompts:ro
-      - ./openhands/agents:/.openhands/agents:ro
+      - ./openhands/agents:/root/.openhands/agents:ro
       - ./openhands/tools:/.openhands/tools:ro
       - ${WORKSPACE_DIR:-./workspace}:/opt/workspace_base
