@@ -11,7 +11,7 @@ ifneq (,$(wildcard ./.env))
     export
 endif
 
-PORT ?= $(or $(OPENHANDS_PORT),3000)
+PORT ?= $(or $(OPENHANDS_PORT),8000)
 
 .PHONY: help up down restart logs status shell clean workspace-dir
 

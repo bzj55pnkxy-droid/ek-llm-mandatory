@@ -141,7 +141,7 @@ make up
 ```
 
 Once started:
-- Open your browser to **`http://localhost:3000`**.
+- Open your browser to **`http://localhost:8000`**.
 - **Workspace bind mount**: The `./workspace` directory on your host is mounted to `/opt/workspace_base` (and passed to spawned sandbox containers via the host Docker daemon).
 - **Custom work bind mounts**:
   - `./openhands/config`: Persistent state, SQLite database (`openhands.db`), and `settings.json`.
