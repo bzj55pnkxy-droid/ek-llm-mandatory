@@ -1,7 +1,7 @@
 {
   "providers": {
     "ollama-11434": {
-      "baseUrl": "http://localhost:11434/v1",
+      "baseUrl": "${OLLAMA_BASE_URL:-http://localhost:11434/v1}",
       "api": "openai-completions",
       "apiKey": "ollama",
       "models": [
@@ -12,7 +12,7 @@
       ]
     },
     "ollama-11435": {
-      "baseUrl": "http://localhost:11435/v1",
+      "baseUrl": "${OLLAMA_BASE_URL_11435:-http://localhost:11435/v1}",
       "api": "openai-completions",
       "apiKey": "ollama",
       "models": [

@@ -7,9 +7,10 @@
 openhands/config/*
 !openhands/config/settings.json
 
-# Pi runtime cache
+# Pi runtime cache, auth, and sessions
 pi/.pi/models-store.json
-
+pi/.pi/auth.json
+pi/.pi/sessions/
 # Pi checkout fetched by `make install`.
 pi/src/
 
