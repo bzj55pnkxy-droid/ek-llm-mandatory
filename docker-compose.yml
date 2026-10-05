@@ -19,6 +19,8 @@ services:
       - SANDBOX_USER_ID=${SANDBOX_USER_ID:-0}
       - WORKSPACE_MOUNT_PATH=${WORKSPACE_DIR:-/opt/workspace_base}
       - WORKSPACE_BASE=/opt/workspace_base
+      # V1 sandboxes only receive mounts listed here; WORKSPACE_MOUNT_PATH is ignored.
+      - SANDBOX_VOLUMES=${WORKSPACE_DIR:?set WORKSPACE_DIR to the absolute path of ./workspace}:/workspace/project:rw
       - FILE_STORE_PATH=/.openhands
       - AGENT_SERVER_IMAGE_REPOSITORY=${OPENHANDS_AGENT_SERVER_IMAGE:-ghcr.io/openhands/agent-server}
       - AGENT_SERVER_IMAGE_TAG=${OPENHANDS_AGENT_SERVER_TAG:-1.26.0-python}

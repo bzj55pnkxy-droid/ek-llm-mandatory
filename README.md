@@ -11,9 +11,11 @@ openhands/
   pyproject.toml / uv.lock    local OpenHands SDK (v1.27.0) and uv (v0.12.21)
   config/settings.example.json  OpenHands model profiles template (copied to gitignored settings.json)
   prompts/
-    system_prompt.txt         custom system prompt (full verbatim override)
+    system_prompt.txt         main agent (orchestrator) system prompt (full verbatim override)
   agents/
-    scout.md / worker.md      custom subagent definitions (.md files)
+    architect.md, tech-lead.md, coder.md, tester.md, documenter.md, deployer.md
+                              role sub-agents the orchestrator delegates to
+    scout.md                  read-only exploration sub-agent
   tools/
     custom_tool.py            custom Python tools using openhands-sdk
 pi/
@@ -150,13 +152,27 @@ make up
 
 Once started:
 - Open your browser to **`http://localhost:8000`**.
-- **Workspace bind mount**: The `./workspace` directory on your host is mounted to `/opt/workspace_base` (and passed to spawned sandbox containers via the host Docker daemon).
+- **Workspace bind mount**: The `./workspace` directory on your host is mounted to `/opt/workspace_base` in the app container, and to `/workspace/project` (the agent's working directory) in every sandbox container via `SANDBOX_VOLUMES` in `docker-compose.yml`. Files the agent writes appear in `./workspace`. `WORKSPACE_DIR` must be an absolute host path because the host Docker daemon resolves it; sandboxes started before this mount existed keep their files inside the container.
 - **Custom work bind mounts**:
   - `./openhands/config`: Persistent state, SQLite database (`openhands.db`), and the gitignored `settings.json` (created from `settings.example.json` on `make up`).
-  - `./openhands/prompts`: Custom system prompts.
-  - `./openhands/agents`: Custom subagent definitions (`scout.md`, `worker.md`). Mounted at `/root/.openhands/agents` — the container's `HOME` is `/root`, and the SDK resolves user-level agent directories from `Path.home()`. Mounting anywhere else silently loads nothing.
+  - `./openhands/prompts`: Custom system prompts (`system_prompt.txt` overrides the main agent's prompt verbatim).
+  - `./openhands/agents`: Custom subagent definitions (`architect.md`, `tech-lead.md`, `coder.md`, `tester.md`, `documenter.md`, `deployer.md`, `scout.md`). Mounted at `/root/.openhands/agents` — the container's `HOME` is `/root`, and the SDK resolves user-level agent directories from `Path.home()`. Mounting anywhere else silently loads nothing.
   - `./openhands/tools`: Custom tools.
 
+
+#### Custom main agent system prompt
+
+The main agent's system prompt is controlled via `./openhands/prompts/system_prompt.txt` (bind-mounted to `/.openhands/prompts/system_prompt.txt:ro`).
+
+- **Verbatim override:** `system_prompt.txt` holds the orchestrator prompt and replaces the main agent's default static system prompt verbatim.
+- **Fallback:** If `system_prompt.txt` is empty or deleted, OpenHands falls back to the default Jinja2 template (`system_prompt.j2`).
+- **The `override_system_prompt.py` patch:** Stock OpenHands ignores custom prompt files for the main agent in the GUI conversation service. `openhands/Dockerfile` applies `patches/override_system_prompt.py` at build time to read this file and set `agent.system_prompt`.
+- **Reloading:** Edit `openhands/prompts/system_prompt.txt` and run `make restart` (or `docker compose restart openhands`) to apply changes.
+
+Verify that your custom prompt loaded:
+```bash
+docker compose logs openhands | grep "Loaded custom system prompt override"
+```
 
 #### Custom sub-agents
 
@@ -169,7 +185,7 @@ Sub-agents are Markdown files with YAML frontmatter. Discovery order (first matc
 5. `~/.agents/agents/*.md`
 6. `~/.openhands/agents/*.md`
 
-Only top-level `.md` files load; `README.md` is skipped. This repo uses the user-level path (6), bind-mounted from `./openhands/agents`. The project-level paths (3, 4) resolve inside the sandbox, whose `/workspace/project` is not populated from `./workspace`, so agents placed there are not discovered.
+Only top-level `.md` files load; `README.md` is skipped. This repo uses the user-level path (6), bind-mounted from `./openhands/agents`; keep definitions there.
 
 ```markdown
 ---
