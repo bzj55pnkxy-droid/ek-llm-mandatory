@@ -5,6 +5,9 @@
     "enable_sub_agents": true,
     "llm": {
       "model": "ollama_chat/qwen3.5-9b-openhands:latest",
+      "model_canonical_name": "dashscope/qwen3.5-plus",
+      "max_input_tokens": 32768,
+      "max_output_tokens": 32768,
       "stream": true,
       "api_key": "ollama"
     }
@@ -13,6 +16,9 @@
     "profiles": {
       "qwen3.5-9b-openhands": {
         "model": "ollama_chat/qwen3.5-9b-openhands:latest",
+        "model_canonical_name": "dashscope/qwen3.5-plus",
+        "max_input_tokens": 32768,
+        "max_output_tokens": 32768,
         "stream": true,
         "api_key": "ollama"
       },
