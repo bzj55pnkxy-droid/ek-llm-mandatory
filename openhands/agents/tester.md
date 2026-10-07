@@ -35,7 +35,8 @@ Write the paths the brief gives you. Defaults:
    - other stacks: the standard linter for that stack
    Prefer tools the project already configures. A tool is not installed: install it, or mark it "not run" with the reason.
 7. Run coverage if the test runner supports it cheaply (for example `pytest --cov`).
-8. Write the quality report.
+8. The project has visual output (web page, canvas, game): check it by screenshot. Serve it over HTTP in the background (`python3 -m http.server 8765 > /tmp/http.log 2>&1 &`; ES modules do not load from `file://`), open each main screen with `browser_navigate`, call `browser_get_state` with `include_screenshot: true`, and look at the image (WebGL renders on the CPU here; wait a few seconds after loading). Compare it with every visual acceptance criterion in the tickets. Stop the server by its PID.
+9. Write the quality report.
 
 ## Rules
 - NEVER change product code. You MAY fix bugs in test code.
@@ -66,6 +67,10 @@ Passed: N  Failed: N  Skipped: N
 
 ## Contract conformance
 | Endpoint / command | Tested (success / error) | Result |
+
+## Visual check
+| Screen / URL | Expected (ticket criterion) | Seen in screenshot | Result | Owning ticket |
+<or "not applicable: no visual output">
 
 ## Known limitations and risks
 - <item>

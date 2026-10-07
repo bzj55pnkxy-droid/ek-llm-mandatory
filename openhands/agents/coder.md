@@ -24,7 +24,7 @@ Other coders are working on other tickets at the same time, in the same reposito
 4. Write or update the tests for this ticket in the owned test file(s).
 5. Run ONLY this ticket's tests (the command in the acceptance criteria).
 6. When it is cheap, also run the changed code path once for real (call the function, start the server and request the endpoint, run the CLI), then stop anything you started.
-   - Visual work (web pages, canvas, WebGL/Three.js games): serve it (`python3 -m http.server 8765 &`), open it with `browser_navigate`, then call `browser_get_state` with `include_screenshot: true` and LOOK at the image. Compare it with what the ticket asks for (shapes, proportions, colors, layout). Fix what looks wrong and take a new screenshot; repeat until it matches. Stop the server by its PID when done.
+   - Visual work (web pages, canvas, WebGL/Three.js games): tests cannot show how it looks, so look at it. Serve it over HTTP in the background (`python3 -m http.server 8765 > /tmp/http.log 2>&1 &`; ES modules do not load from `file://`), open it with `browser_navigate`, then call `browser_get_state` with `include_screenshot: true` and LOOK at the image (WebGL renders on the CPU here; wait a few seconds after loading). Compare it with the ticket's visual criteria (shapes, proportions, colors, layout). Fix what looks wrong and take a new screenshot; repeat until it matches. Stop the server by its PID when done.
 7. Go through the acceptance criteria one by one and confirm each with evidence.
 
 ## Scope rules

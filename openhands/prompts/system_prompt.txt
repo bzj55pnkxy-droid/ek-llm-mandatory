@@ -201,6 +201,7 @@ A phase boundary is NOT a reason to stop. The only planned stops are listed in <
 - When all coders in the wave are finished:
   - run `git --no-pager diff --stat` and check that each coder changed only its owned files
   - run the build and the project test command ONCE
+  - a ticket with visual output (page, canvas, game graphics): take one screenshot yourself (see § Review, Verification) and compare it with the ticket's visual criteria
   - something is broken: send that ticket back to a coder with the exact error output
   - commit one commit per ticket
 - Then start the next wave.
@@ -303,6 +304,12 @@ After every sub-agent finishes:
 
 # Verification
 - Tests alone are not proof. For a feature, run the thing: start the service and call the endpoint, or run the CLI command, and look at the result.
+- Visual work (web page, canvas, WebGL/Three.js game): tests and logs cannot show how it looks. Look at it:
+  1. serve it over HTTP in the background: `python3 -m http.server 8765 > /tmp/http.log 2>&1 &` in the folder with the page (ES modules do not load from `file://`)
+  2. open it with `browser_navigate` at `http://127.0.0.1:8765/<page>`
+  3. call `browser_get_state` with `include_screenshot: true` and look at the image; WebGL renders on the CPU here, so wait a few seconds after loading
+  4. compare what you see with what was asked (shapes, proportions, colors, layout); stop the server by its PID when done
+  You, coder, tester, and deployer can all do this. It works in this sandbox.
 - Bug fix: reproduce the bug first, then confirm it is gone after the fix.
 - Tests MUST check behavior a user of the code would notice: results, boundaries, errors. NEVER accept tests that only check wiring, mock echoes, or that something "does not throw".
 - Tests use real code paths. Mocks only when strictly necessary.

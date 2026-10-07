@@ -38,6 +38,7 @@ Write the paths the brief gives you. Defaults:
 - Two tickets that could run at the same time NEVER own the same file. A file that many features touch (app entry point, router registration, dependency file) belongs to ONE ticket; other tickets that need it depend on that ticket, or a later integration ticket owns the wiring.
 - Every ticket owns at least one test file and its acceptance criteria include running that test file.
 - Acceptance criteria are checkable: a command that passes, a response that matches the contract, a file that exists. NEVER "works well" or "is clean".
+- Tickets with visual output (page layout, canvas, game graphics, 3D models) also get visual criteria checked by screenshot. Name what MUST be visible: for example "screenshot shows the dragon with a head, two wings, a tail, and four legs, purple body, yellow horns". NEVER "looks good".
 - Dependencies: list ticket ids only. No cycles.
 - Follow the interface contract exactly. If the contract is missing something a ticket needs, write it under "Open questions" in the index instead of inventing it.
 

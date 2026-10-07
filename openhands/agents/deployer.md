@@ -28,6 +28,7 @@ Write the paths the brief gives you. Defaults:
 4. Validate, using the strongest option available:
    a. container: build the image, run it, wait until it is ready, run the health check (for example `curl -fsS http://127.0.0.1:<port>/health` or one documented API example), then stop and remove the container
    b. no container runtime: run the deployment script or the production start command, health-check it the same way, then stop the process by its exact PID
+   For a web UI, also open the running app with `browser_navigate` and call `browser_get_state` with `include_screenshot: true`; record in the report whether the page actually renders (not blank, no error page).
    c. neither can run: check the artifacts statically (`bash -n deploy/deploy.sh`, `docker compose config` if available, YAML parse) and mark the runtime checks "not run" with the reason
 5. Walk the checklist and mark every item.
 6. Write the validation report.
