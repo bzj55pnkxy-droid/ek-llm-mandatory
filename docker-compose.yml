@@ -1,6 +1,8 @@
 services:
   openhands:
-    image: ${OPENHANDS_IMAGE:-docker.openhands.dev/openhands/openhands:1.8}
+    # Keep the patched app separate from the upstream image used by FROM.
+    image: ek-llm-mandatory-openhands:local
+    pull_policy: build
     build:
       context: ./openhands
       dockerfile: Dockerfile
