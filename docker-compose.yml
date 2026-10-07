@@ -33,7 +33,14 @@ services:
       - OPENAI_API_BASE=${LLM_BASE_URL:-http://${OLLAMA_HOST:-host.docker.internal}:11434/v1}
       # OH_ENABLE_VNC overrides the sandbox default (0): starts the X desktop so the
       # browser tool runs headful, which is required for WebGL in screenshots.
-      - OH_AGENT_SERVER_ENV={"OH_ENABLE_VNC":"true","OLLAMA_API_BASE":"${OLLAMA_DISCOVERY_URL:-http://${OLLAMA_HOST:-host.docker.internal}:11434}","OPENAI_API_BASE":"${LLM_BASE_URL:-http://${OLLAMA_HOST:-host.docker.internal}:11434/v1}","OPENAI_BASE_URL":"${LLM_BASE_URL:-http://${OLLAMA_HOST:-host.docker.internal}:11434/v1}"}
+      # OH_WEBHOOKS_0_EVENT_BUFFER_SIZE: with streaming every token is an event
+      # (~33/s); the default batch of 5 floods the app with webhook posts. The GUI
+      # streams live from the sandbox websocket, so batching only delays the app's
+      # stored copy (flushed at 200 events or every 30s).
+      - OH_AGENT_SERVER_ENV={"OH_ENABLE_VNC":"true","OH_WEBHOOKS_0_EVENT_BUFFER_SIZE":"200","OLLAMA_API_BASE":"${OLLAMA_DISCOVERY_URL:-http://${OLLAMA_HOST:-host.docker.internal}:11434}","OPENAI_API_BASE":"${LLM_BASE_URL:-http://${OLLAMA_HOST:-host.docker.internal}:11434/v1}","OPENAI_BASE_URL":"${LLM_BASE_URL:-http://${OLLAMA_HOST:-host.docker.internal}:11434/v1}"}
+      # Default grace is 15s; starting the VNC desktop pushes agent-server startup
+      # past it (~21s observed), and the app then marks the new sandbox as ERROR.
+      - SANDBOX_STARTUP_GRACE_SECONDS=${SANDBOX_STARTUP_GRACE_SECONDS:-90}
       - SANDBOX_MEMORY=${SANDBOX_MEMORY:-4g}
       - SANDBOX_CPUS=${SANDBOX_CPUS:-2}
       - SANDBOX_PIDS_LIMIT=${SANDBOX_PIDS_LIMIT:-512}
