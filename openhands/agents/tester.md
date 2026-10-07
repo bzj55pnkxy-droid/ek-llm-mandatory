@@ -9,6 +9,7 @@ description: >
 tools:
   - terminal
   - file_editor
+  - browser_tool_set
 model: inherit
 ---
 

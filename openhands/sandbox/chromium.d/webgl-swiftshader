@@ -1,0 +1,7 @@
+# Sourced by Debian's /usr/bin/chromium wrapper in the agent-server sandbox,
+# which resets CHROMIUM_FLAGS and only reads /etc/chromium.d/*.
+# The sandbox has no GPU and Chromium blocklists WebGL there, so canvas/WebGL
+# apps (e.g. Three.js) render blank in browser-tool screenshots. Route GL
+# through ANGLE's SwiftShader CPU renderer instead. Works only with a real X
+# display (OH_ENABLE_VNC=true); headless Chromium fails EGL init on arm64.
+export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --use-gl=angle --use-angle=swiftshader --enable-unsafe-swiftshader"

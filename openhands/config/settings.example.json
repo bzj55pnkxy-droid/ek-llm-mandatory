@@ -24,6 +24,9 @@
       },
       "ornith-1.5-openhands": {
         "model": "ollama_chat/ornith-1.5-openhands:latest",
+        "model_canonical_name": "dashscope/qwen3.5-plus",
+        "max_input_tokens": 32768,
+        "max_output_tokens": 32768,
         "stream": true,
         "api_key": "ollama"
       }

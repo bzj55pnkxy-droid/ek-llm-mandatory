@@ -3,6 +3,7 @@
 # Dynamic host-agnostic paths: resolves current repository root on any OS/host
 ROOT_DIR := $(shell pwd -P 2>/dev/null || pwd)
 export WORKSPACE_DIR ?= $(ROOT_DIR)/workspace
+export REPO_DIR ?= $(ROOT_DIR)
 export SANDBOX_USER_ID ?= $(shell id -u 2>/dev/null || echo 0)
 
 # Load local .env if present
